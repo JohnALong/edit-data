@@ -1,7 +1,9 @@
 import apiActions from "./api.js"
 import render from "./dom.js"
+import api from "./api.js"
 
 const recipeList = document.querySelector("#recipeList")
+const saveButton = document.querySelector("#saveRecipe")
 
 export default {
     registerDeleteListener () {
@@ -13,6 +15,29 @@ export default {
                 apiActions.deleteRecipe(recipeToDelete)
                     .then(apiActions.getAllRecipes)
                     .then(render)
+            }
+        })
+    },
+    registerEditListener () {
+        recipeList.addEventListener("click", event => {
+            if (event.target.id.startsWith("editRecipe--")) {
+                const recipeIdToEdit = event.target.id.split("--")[1]
+                console.log("edit id", recipeIdToEdit)
+                apiActions.updateFormFields(recipeIdToEdit)
+            }
+        })
+    },
+    registerSaveListener () {
+        saveButton.addEventListener("click", event => {
+            const hiddenRecipeId = document.querySelector("#recipeId")
+            console.log("stuff", hiddenRecipeId.value)
+            console.log("id to save", recipeId.value)
+            if (hiddenRecipeId.value !== "") {
+                apiActions.editRecipe(recipeId.value)
+                .then(apiActions.getAllRecipes)
+                .then(render)
+            } else {
+                console.log("save recipe")
             }
         })
     }
